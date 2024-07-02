@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: hello-appset
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - namespace: dev
+      - namespace: stg
+      - namespace: prd
+  template:
+    metadata:
+      name: '{{ .namespace }}'
+    spec:
+      project: "default"
+      source:
+        repoURL: https://github.com/dacofr/hello-appset.git
+        targetRevision: HEAD
+        path: 'charts/noop'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ .namespace }}'
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          prune: true
+          allowEmpty: true
