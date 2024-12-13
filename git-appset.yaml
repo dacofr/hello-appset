@@ -14,7 +14,7 @@ spec:
     metadata:
       name: '{{ path.basename }}'
     spec:
-      project: '{{ path.basename }}'
+      project: 'default'
       source:
         repoURL: https://github.com/dacofr/hello-appset.git
         targetRevision: main
